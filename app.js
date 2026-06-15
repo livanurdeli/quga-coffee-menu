@@ -223,7 +223,7 @@ function openProductModal(id) {
   if (!item) return;
   const lang = currentLanguage;
   const cat  = window.menuData.menuCategories.find(c => c.id === item.categoryId);
-  document.getElementById('modal-category').textContent = cat ? `${cat.icon} ${cat.name[lang]}` : '';
+  document.getElementById('modal-category').textContent = cat ? cat.name[lang] : '';
   document.getElementById('modal-image').src = item.image;
   document.getElementById('modal-name').textContent = item.name[lang];
   document.getElementById('modal-price').textContent = `${item.price} TL`;
@@ -443,7 +443,7 @@ function openAdminEditModal(itemId) {
   pendingImageData = null;
 
   const cat = window.menuData.menuCategories.find(c => c.id === item.categoryId);
-  document.getElementById('admin-edit-cat-label').textContent   = cat ? `${cat.icon} ${cat.name['tr']}` : '';
+  document.getElementById('admin-edit-cat-label').textContent   = cat ? cat.name['tr'] : '';
   document.getElementById('admin-edit-product-name').textContent = item.name['tr'];
 
   document.getElementById('edit-img-preview').src = item.image;
