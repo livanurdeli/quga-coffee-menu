@@ -141,9 +141,15 @@
               <span class="admin-badge">ADMIN</span>
               <span class="admin-panel-title">Menü Yönetimi</span>
             </div>
-            <button class="modal-close" id="btn-close-admin-panel">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </button>
+            <div style="display:flex;gap:8px;align-items:center">
+              <button class="btn-add-product" id="btn-open-add-product" title="Yeni Ürün Ekle" style="display: flex; align-items: center; gap: 4px; padding: 6px 12px; background: var(--accent-gold); color: #1F1916; border: none; border-radius: 20px; font-size: 0.8rem; font-weight: 700; cursor: pointer; transition: transform 0.2s;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                Ürün Ekle
+              </button>
+              <button class="modal-close" id="btn-close-admin-panel">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+              </button>
+            </div>
           </div>
 
           <!-- Category filter tabs inside panel -->

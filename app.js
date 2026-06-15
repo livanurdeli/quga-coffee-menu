@@ -320,12 +320,10 @@ function setupAdminPanel() {
   // Close edit modal
   document.getElementById('btn-close-admin-edit').addEventListener('click', () => {
     document.getElementById('admin-edit-modal').classList.remove('open');
-    openAdminPanel();
   });
   document.getElementById('admin-edit-modal').addEventListener('click', e => {
     if (e.target === e.currentTarget) {
       e.currentTarget.classList.remove('open');
-      openAdminPanel();
     }
   });
 
@@ -369,13 +367,11 @@ function setupAdminPanel() {
   
   document.getElementById('btn-close-admin-add').addEventListener('click', () => {
     document.getElementById('admin-add-modal').classList.remove('open');
-    openAdminPanel();
   });
   
   document.getElementById('admin-add-modal').addEventListener('click', e => {
     if (e.target === e.currentTarget) {
       e.currentTarget.classList.remove('open');
-      openAdminPanel();
     }
   });
 
@@ -431,7 +427,6 @@ function openAdminAddModal() {
   switchAddNameTab('tr');
   switchAddDescTab('tr');
 
-  document.getElementById('admin-panel').classList.remove('open');
   document.getElementById('admin-add-modal').classList.add('open');
 }
 
@@ -492,7 +487,7 @@ function saveAdminAdd() {
   applyAdminEdits();
   document.getElementById('admin-add-modal').classList.remove('open');
   renderMenu();
-  openAdminPanel();
+  renderAdminList();
   showToast('✓ Yeni ürün başarıyla eklendi!');
 }
 
@@ -640,7 +635,6 @@ function openAdminEditModal(itemId) {
   switchNameTab('tr');
   switchDescTab('tr');
 
-  document.getElementById('admin-panel').classList.remove('open');
   document.getElementById('admin-edit-modal').classList.add('open');
 }
 
@@ -700,7 +694,7 @@ function saveAdminEdit() {
 
   document.getElementById('admin-edit-modal').classList.remove('open');
   renderMenu();
-  openAdminPanel();
+  renderAdminList();
   showToast('✓ Değişiklikler kaydedildi!');
 }
 
