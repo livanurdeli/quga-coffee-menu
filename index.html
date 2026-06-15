@@ -5,142 +5,113 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>QuGa COFFEE | Menü</title>
-  <meta name="description" content="QuGa COFFEE'nin tüm lezzetlerini keşfedin. Özel içecekler, smoothie'ler ve daha fazlası.">
+  <meta name="description" content="QuGa COFFEE'nin tüm lezzetlerini keşfedin.">
   <link rel="stylesheet" href="app.css">
 </head>
 
 <body>
   <div class="app-shell">
-
-    <!-- MOBILE SCREEN -->
     <div class="mobile-frame" id="app-view">
 
-      <!-- STICKY HEADER -->
+      <!-- ══ STICKY HEADER ══════════════════════════════ -->
       <header>
         <div class="header-top">
           <div class="branding">
-            <div class="logo-circle" style="background: transparent; box-shadow: none;">
-              <img src="256c61ef-ed13-48c1-b684-1bd9c022a3b7.png" alt="QuGa COFFEE Logo"
-                style="width: 44px; height: 44px; border-radius: 12px; object-fit: contain;">
+            <div class="logo-circle">
+              <img src="256c61ef-ed13-48c1-b684-1bd9c022a3b7.png" alt="QuGa COFFEE Logo">
             </div>
             <div class="brand-details">
-              <h1 id="brand-name">QuGa COFFEE</h1>
-              <span id="location-label">✦ Menü</span>
+              <h1>QuGa COFFEE</h1>
+              <span id="admin-status-label">✦ Menü</span>
             </div>
           </div>
-
           <div class="header-actions">
-            <!-- Language Toggle -->
-            <button class="icon-btn" id="lang-toggle" aria-label="Dil Değiştir">
+            <button class="icon-btn" id="lang-toggle" aria-label="Dil">
               <span id="lang-label">TR</span>
             </button>
-            <!-- Admin Trigger (settings icon) -->
-            <button class="icon-btn" id="btn-admin-trigger" aria-label="Admin Girişi">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <button class="icon-btn" id="btn-admin-trigger" aria-label="Admin">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="12" cy="12" r="3"/>
                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
               </svg>
             </button>
-            <!-- Theme Toggle -->
-            <button class="icon-btn" id="theme-toggle" aria-label="Tema Değiştir">
-              <svg id="theme-icon-dark" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor"
-                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            <button class="icon-btn" id="theme-toggle" aria-label="Tema">
+              <svg id="theme-icon-dark" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
               </svg>
             </button>
           </div>
         </div>
-
-        <!-- Search & Filter Tags -->
         <div class="search-filter-row">
           <div class="search-bar">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="menu-search" placeholder="Ürün veya kategori ara...">
           </div>
           <div class="filter-scroll">
             <button class="filter-pill" data-tag="popular" id="filter-popular">⭐ Popüler</button>
-            <button class="filter-pill" data-tag="vegan" id="filter-vegan">🌱 Vegan</button>
-            <button class="filter-pill" data-tag="gf" id="filter-gf">🌾 Glutensiz</button>
-            <button class="filter-pill" data-tag="hot" id="filter-hot">🔥 Sıcak</button>
-            <button class="filter-pill" data-tag="cold" id="filter-cold">❄️ Soğuk</button>
+            <button class="filter-pill" data-tag="vegan"   id="filter-vegan">🌱 Vegan</button>
+            <button class="filter-pill" data-tag="gf"      id="filter-gf">🌾 Glutensiz</button>
+            <button class="filter-pill" data-tag="hot"     id="filter-hot">🔥 Sıcak</button>
+            <button class="filter-pill" data-tag="cold"    id="filter-cold">❄️ Soğuk</button>
           </div>
         </div>
       </header>
 
-      <!-- STICKY CATEGORY SLIDER -->
+      <!-- ══ CATEGORY BAR ══════════════════════════════ -->
       <nav class="category-container" id="category-bar">
         <div class="category-scroll" id="categories-list"></div>
       </nav>
 
-      <!-- WELCOME HERO BANNER -->
-      <div class="welcome-hero" style="padding: 15px 20px 0 20px;">
+      <!-- ══ HERO BANNER ════════════════════════════════ -->
+      <div style="padding:15px 20px 0">
         <img src="c365ce85-02cf-4708-bcb3-cc305e992cad.jpg" alt="QuGa COFFEE"
-          style="width: 100%; height: 180px; object-fit: cover; border-radius: 16px; box-shadow: 0 8px 20px rgba(197, 155, 39, 0.15);">
+          style="width:100%;height:180px;object-fit:cover;border-radius:16px;box-shadow:0 8px 20px rgba(197,155,39,0.15)">
       </div>
 
-      <!-- DYNAMIC MENU BODY -->
+      <!-- ══ MENU BODY ══════════════════════════════════ -->
       <main class="menu-section" id="menu-container"></main>
 
-      <!-- FOOTER -->
-      <footer class="app-footer">
-        <span>© 2026 QuGa COFFEE</span>
-      </footer>
+      <!-- ══ FOOTER ═════════════════════════════════════ -->
+      <footer class="app-footer">© 2026 QuGa COFFEE</footer>
 
-      <!-- ══════════════════════════════════════════════ -->
-      <!-- PRODUCT DETAIL MODAL -->
-      <!-- ══════════════════════════════════════════════ -->
+
+      <!-- ════════════════════════════════════════════════
+           PRODUCT DETAIL MODAL
+           ════════════════════════════════════════════════ -->
       <div class="modal-overlay" id="product-detail-modal">
         <div class="modal-sheet">
           <div class="modal-header">
-            <span class="tag-mini" id="modal-category">Kategori</span>
-            <button class="modal-close" id="btn-close-modal" aria-label="Kapat">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+            <span class="tag-mini" id="modal-category"></span>
+            <button class="modal-close" id="btn-close-modal">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
-          <img class="modal-hero-img" id="modal-image" src="" alt="Ürün Detay Görseli">
+          <img class="modal-hero-img" id="modal-image" src="" alt="">
           <div class="modal-title-row">
-            <h2 id="modal-name">Ürün İsmi</h2>
-            <div class="menu-price" id="modal-price">0 TL</div>
+            <h2 id="modal-name"></h2>
+            <div class="menu-price" id="modal-price"></div>
           </div>
-          <p class="modal-desc" id="modal-desc">Ürün açıklaması burada yer alır.</p>
+          <p class="modal-desc" id="modal-desc"></p>
           <div class="modal-meta-row">
-            <div class="modal-meta-item">
-              <span id="lbl-calories">Kalori</span>: <strong id="modal-calories">0 kcal</strong>
-            </div>
-            <div class="modal-meta-item">
-              <span id="lbl-allergens">Alerjen</span>: <strong id="modal-allergens">—</strong>
-            </div>
+            <div class="modal-meta-item"><span id="lbl-calories">Kalori</span>: <strong id="modal-calories"></strong></div>
+            <div class="modal-meta-item"><span id="lbl-allergens">Alerjen</span>: <strong id="modal-allergens"></strong></div>
           </div>
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════════════ -->
-      <!-- ADMIN LOGIN MODAL -->
-      <!-- ══════════════════════════════════════════════ -->
+
+      <!-- ════════════════════════════════════════════════
+           ADMIN LOGIN MODAL
+           ════════════════════════════════════════════════ -->
       <div class="modal-overlay" id="admin-login-modal">
-        <div class="modal-sheet admin-modal-sheet">
+        <div class="modal-sheet" style="max-height:55%">
           <div class="modal-header">
             <h2 class="admin-modal-title">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-amber)">
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent-amber)"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
               Admin Girişi
             </h2>
-            <button class="modal-close" id="btn-close-admin-login" aria-label="Kapat">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+            <button class="modal-close" id="btn-close-admin-login">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
           <div class="admin-form">
@@ -158,102 +129,149 @@
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════════════ -->
-      <!-- ADMIN PANEL DRAWER -->
-      <!-- ══════════════════════════════════════════════ -->
+
+      <!-- ════════════════════════════════════════════════
+           ADMIN PANEL (full-screen drawer)
+           ════════════════════════════════════════════════ -->
       <div class="admin-panel-overlay" id="admin-panel">
         <div class="admin-panel-sheet">
 
-          <!-- Panel Header -->
           <div class="admin-panel-header">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <div class="admin-badge">ADMIN</div>
-              <span style="font-family:var(--font-heading);font-weight:800;font-size:1.1rem;">Menü Yönetimi</span>
+            <div class="admin-header-left">
+              <span class="admin-badge">ADMIN</span>
+              <span class="admin-panel-title">Menü Yönetimi</span>
             </div>
-            <button class="modal-close" id="btn-close-admin-panel" aria-label="Kapat">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+            <button class="modal-close" id="btn-close-admin-panel">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
 
-          <p class="admin-panel-desc">Fiyat veya resim URL'sini değiştir, Kaydet'e bas.</p>
+          <!-- Category filter tabs inside panel -->
+          <div class="admin-cat-tabs" id="admin-cat-tabs"></div>
 
-          <!-- Product List (populated by JS) -->
+          <!-- Search inside admin panel -->
+          <div class="admin-search-wrap">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="admin-search" placeholder="Ürün ara...">
+          </div>
+
+          <!-- Product grid -->
           <div class="admin-items-list" id="admin-items-list"></div>
 
-          <!-- Footer actions -->
           <div class="admin-panel-footer">
             <button class="btn-admin-logout" id="btn-admin-logout">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-                <polyline points="16 17 21 12 16 7"/>
-                <line x1="21" y1="12" x2="9" y2="12"/>
-              </svg>
-              Çıkış Yap
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Çıkış
             </button>
             <button class="btn-admin-reset" id="btn-admin-reset">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="1 4 1 10 7 10"/>
-                <path d="M3.51 15a9 9 0 1 0 .49-4.95"/>
-              </svg>
-              Varsayılana Sıfırla
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/></svg>
+              Sıfırla
             </button>
           </div>
         </div>
       </div>
 
-      <!-- ══════════════════════════════════════════════ -->
-      <!-- ADMIN ITEM EDIT MODAL -->
-      <!-- ══════════════════════════════════════════════ -->
+
+      <!-- ════════════════════════════════════════════════
+           ADMIN ITEM EDIT MODAL (detailed)
+           ════════════════════════════════════════════════ -->
       <div class="modal-overlay" id="admin-edit-modal">
-        <div class="modal-sheet admin-modal-sheet">
+        <div class="modal-sheet admin-edit-sheet">
+
           <div class="modal-header">
-            <h2 class="admin-modal-title" id="admin-edit-title">Ürün Düzenle</h2>
-            <button class="modal-close" id="btn-close-admin-edit" aria-label="Kapat">
-              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-                stroke-linecap="round" stroke-linejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
+            <div>
+              <div class="admin-edit-cat-label" id="admin-edit-cat-label"></div>
+              <h2 class="admin-edit-product-name" id="admin-edit-product-name"></h2>
+            </div>
+            <button class="modal-close" id="btn-close-admin-edit">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
             </button>
           </div>
 
-          <!-- Current image preview -->
-          <div class="edit-img-preview-wrap">
-            <img id="edit-img-preview" src="" alt="Ürün Görseli">
+          <!-- ── IMAGE SECTION ── -->
+          <div class="edit-section">
+            <div class="edit-section-title">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              Ürün Görseli
+            </div>
+
+            <!-- Current image preview -->
+            <div class="edit-img-preview-wrap" id="edit-img-preview-wrap">
+              <img id="edit-img-preview" src="" alt="Önizleme">
+              <div class="edit-img-overlay">
+                <label for="edit-img-file" class="edit-img-change-btn">
+                  <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                  Galерiden Seç
+                </label>
+              </div>
+            </div>
+
+            <!-- Hidden file input -->
+            <input type="file" id="edit-img-file" accept="image/*" style="display:none">
+
+            <!-- Or URL -->
+            <div class="edit-img-url-row">
+              <span class="or-divider">veya URL girin</span>
+              <input type="url" id="edit-image-url" placeholder="https://örnek.com/resim.jpg">
+            </div>
           </div>
 
-          <div class="admin-form">
-            <div class="admin-field">
-              <label for="edit-price">Fiyat (TL)</label>
-              <input type="number" id="edit-price" placeholder="0" min="0" step="1">
+          <!-- ── PRICE ── -->
+          <div class="edit-section">
+            <div class="edit-section-title">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              Fiyat
             </div>
-            <div class="admin-field">
-              <label for="edit-image">Resim URL veya Dosya Adı</label>
-              <input type="text" id="edit-image" placeholder="https://... veya dosyaadi.jpg">
-              <span class="field-hint">URL veya projedeki resim dosya adını girin</span>
+            <div class="edit-price-row">
+              <input type="number" id="edit-price" placeholder="0" min="0" step="1" class="edit-price-input">
+              <span class="price-currency">TL</span>
             </div>
-            <button class="btn-admin-submit" id="btn-admin-edit-save">
-              ✓ Kaydet
-            </button>
           </div>
+
+          <!-- ── NAMES ── -->
+          <div class="edit-section">
+            <div class="edit-section-title">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+              Ürün Adı
+            </div>
+            <div class="edit-lang-tabs">
+              <button class="edit-lang-tab active" data-lang="tr" id="name-tab-tr">TR</button>
+              <button class="edit-lang-tab" data-lang="en" id="name-tab-en">EN</button>
+            </div>
+            <input type="text" id="edit-name-tr" placeholder="Türkçe ürün adı" class="edit-input" data-name-lang="tr">
+            <input type="text" id="edit-name-en" placeholder="English product name" class="edit-input hidden" data-name-lang="en">
+          </div>
+
+          <!-- ── DESCRIPTIONS ── -->
+          <div class="edit-section">
+            <div class="edit-section-title">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg>
+              Açıklama
+            </div>
+            <div class="edit-lang-tabs">
+              <button class="edit-lang-tab active" data-lang="tr" id="desc-tab-tr">TR</button>
+              <button class="edit-lang-tab" data-lang="en" id="desc-tab-en">EN</button>
+            </div>
+            <textarea id="edit-desc-tr" placeholder="Türkçe açıklama" class="edit-textarea" rows="3" data-desc-lang="tr"></textarea>
+            <textarea id="edit-desc-en" placeholder="English description" class="edit-textarea hidden" rows="3" data-desc-lang="en"></textarea>
+          </div>
+
+          <!-- ── SAVE ── -->
+          <button class="btn-admin-save" id="btn-admin-edit-save">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Değişiklikleri Kaydet
+          </button>
+
         </div>
       </div>
 
-      <!-- Toast Notification -->
+      <!-- Toast -->
       <div class="admin-toast" id="admin-toast"></div>
 
-    </div>
-    <!-- /mobile-frame -->
-
+    </div><!-- /mobile-frame -->
   </div>
 
-  <!-- LOAD SCRIPTS -->
   <script src="menu-data.js"></script>
   <script src="app.js"></script>
 </body>
-
 </html>
