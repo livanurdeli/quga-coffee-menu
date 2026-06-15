@@ -1,52 +1,59 @@
-// app.js — QuGa COFFEE Static Menu
+// app.js — QuGa COFFEE Static Menu + Admin Panel
 
 // ── State ──────────────────────────────────────────────────────────────────
 let currentLanguage = 'tr';
 let currentTheme = 'light';
 let searchQuery = '';
 const activeTags = new Set();
+let isAdmin = false;
+let adminEdits = JSON.parse(localStorage.getItem('quga_admin_edits') || '{}');
+
+// Admin credentials (change these as desired)
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'quga2024';
 
 // ── Translations ───────────────────────────────────────────────────────────
 const t = {
   tr: {
     search: 'Ürün veya kategori ara...',
-    popular: '⭐ Popüler',
-    vegan: '🌱 Vegan',
-    gf: '🌾 Glutensiz',
-    hot: '🔥 Sıcak',
-    cold: '❄️ Soğuk',
-    calories: 'Kalori',
-    allergens: 'Alerjen',
+    popular: '⭐ Popüler', vegan: '🌱 Vegan', gf: '🌾 Glutensiz',
+    hot: '🔥 Sıcak', cold: '❄️ Soğuk',
+    calories: 'Kalori', allergens: 'Alerjen',
     emptySearch: 'Aramanıza uygun ürün bulunamadı.',
     emptySearchBody: 'Farklı bir kelime deneyin veya filtreleri kaldırın.',
-    popular_badge: 'POPÜLER',
-    cold_badge: 'SOĞUK',
-    tagVeg: '🌱 Veg',
-    tagGf: '🌾 GF',
+    popular_badge: 'POPÜLER', cold_badge: 'SOĞUK',
+    tagVeg: '🌱 Veg', tagGf: '🌾 GF',
   },
   en: {
     search: 'Search food or drinks...',
-    popular: '⭐ Popular',
-    vegan: '🌱 Vegan',
-    gf: '🌾 Gluten-Free',
-    hot: '🔥 Hot',
-    cold: '❄️ Cold',
-    calories: 'Calories',
-    allergens: 'Allergens',
+    popular: '⭐ Popular', vegan: '🌱 Vegan', gf: '🌾 Gluten-Free',
+    hot: '🔥 Hot', cold: '❄️ Cold',
+    calories: 'Calories', allergens: 'Allergens',
     emptySearch: 'No products match your search.',
     emptySearchBody: 'Try a different keyword or clear the filters.',
-    popular_badge: 'POPULAR',
-    cold_badge: 'COLD',
-    tagVeg: '🌱 Veg',
-    tagGf: '🌾 GF',
+    popular_badge: 'POPULAR', cold_badge: 'COLD',
+    tagVeg: '🌱 Veg', tagGf: '🌾 GF',
   }
 };
 
+// ── Merge admin edits into menuData ────────────────────────────────────────
+function applyAdminEdits() {
+  window.menuData.menuItems = window.menuData.menuItems.map(item => {
+    if (adminEdits[item.id]) {
+      return { ...item, ...adminEdits[item.id] };
+    }
+    return item;
+  });
+}
+
 // ── Init ───────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  applyAdminEdits();
   setupLanguageToggle();
   setupThemeToggle();
   setupSearchAndFilters();
+  setupProductModal();
+  setupAdminPanel();
   renderCategories();
   renderMenu();
 });
@@ -59,11 +66,9 @@ function setupLanguageToggle() {
     currentLanguage = currentLanguage === 'tr' ? 'en' : 'tr';
     document.getElementById('lang-label').textContent = currentLanguage.toUpperCase();
     document.getElementById('menu-search').placeholder = t[currentLanguage].search;
-    document.getElementById('filter-popular').textContent = t[currentLanguage].popular;
-    document.getElementById('filter-vegan').textContent = t[currentLanguage].vegan;
-    document.getElementById('filter-gf').textContent = t[currentLanguage].gf;
-    document.getElementById('filter-hot').textContent = t[currentLanguage].hot;
-    document.getElementById('filter-cold').textContent = t[currentLanguage].cold;
+    ['popular','vegan','gf','hot','cold'].forEach(tag => {
+      document.getElementById(`filter-${tag}`).textContent = t[currentLanguage][tag];
+    });
     renderCategories();
     renderMenu();
   });
@@ -94,7 +99,6 @@ function setupSearchAndFilters() {
       renderMenu();
     });
   }
-
   document.querySelectorAll('.filter-pill').forEach(pill => {
     pill.addEventListener('click', () => {
       const tag = pill.getAttribute('data-tag');
@@ -114,14 +118,12 @@ function setupSearchAndFilters() {
 function renderCategories() {
   const container = document.getElementById('categories-list');
   if (!container) return;
-
   container.innerHTML = window.menuData.menuCategories.map((cat, i) => `
     <div class="category-card ${i === 0 ? 'active' : ''}" data-cat-id="${cat.id}" id="cat-card-${cat.id}">
       <div class="category-icon">${cat.icon}</div>
       <span>${cat.name[currentLanguage]}</span>
     </div>
   `).join('');
-
   document.querySelectorAll('.category-card').forEach(card => {
     card.addEventListener('click', () => {
       document.querySelectorAll('.category-card').forEach(c => c.classList.remove('active'));
@@ -140,7 +142,6 @@ function renderCategories() {
 function renderMenu() {
   const container = document.getElementById('menu-container');
   if (!container) return;
-
   const { menuCategories, menuItems } = window.menuData;
   const lang = currentLanguage;
   const tr_lang = t[lang];
@@ -170,7 +171,6 @@ function renderMenu() {
   menuCategories.forEach(cat => {
     const items = filtered.filter(i => i.categoryId === cat.id);
     if (items.length === 0) return;
-
     html += `<div class="menu-category-section" id="section-${cat.id}">
       <h2 class="section-title">${cat.name[lang]}</h2>
       <div class="menu-grid">
@@ -179,20 +179,26 @@ function renderMenu() {
           const isCold = item.tags.includes('cold');
           const isVegan = item.tags.includes('vegan');
           const isGf = item.tags.includes('gf');
-
           const badge = isPopular
             ? `<span class="badge-overlay">${tr_lang.popular_badge}</span>`
             : isCold ? `<span class="badge-overlay badge-cold">${tr_lang.cold_badge}</span>` : '';
-
           const tags = [
             isVegan ? `<span class="tag-mini tag-vegan">${tr_lang.tagVeg}</span>` : '',
             isGf ? `<span class="tag-mini">${tr_lang.tagGf}</span>` : ''
           ].join('');
 
+          const adminEditBtn = isAdmin
+            ? `<button class="btn-card-admin-edit" data-edit-id="${item.id}" title="Düzenle" aria-label="Ürünü Düzenle">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+               </button>`
+            : '';
+
           return `
-            <div class="menu-card" data-product-id="${item.id}">
+            <div class="menu-card ${isAdmin ? 'admin-highlight' : ''}" data-product-id="${item.id}">
+              ${adminEditBtn}
               <div class="menu-card-img-wrapper">
-                <img class="menu-card-img" src="${item.image}" alt="${item.name[lang]}" loading="lazy">
+                <img class="menu-card-img" src="${item.image}" alt="${item.name[lang]}" loading="lazy"
+                  onerror="this.src='https://placehold.co/400x300/F1ECE6/9C8E86?text=QuGa'">
                 ${badge}
               </div>
               <div class="menu-card-info">
@@ -213,27 +219,41 @@ function renderMenu() {
 
   container.innerHTML = html;
 
-  // Card click → open detail modal
+  // Card click → detail modal (not when clicking edit btn)
   document.querySelectorAll('.menu-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const id = card.getAttribute('data-product-id');
-      openModal(id);
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.btn-card-admin-edit')) return;
+      openModal(card.getAttribute('data-product-id'));
     });
   });
 
-  // Scroll observer to highlight active category
+  // Admin edit button on card
+  document.querySelectorAll('.btn-card-admin-edit').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openAdminEditModal(btn.getAttribute('data-edit-id'));
+    });
+  });
+
   setupScrollObserver();
 }
 
 // ── Product Detail Modal ───────────────────────────────────────────────────
+function setupProductModal() {
+  document.getElementById('btn-close-modal').addEventListener('click', () => {
+    document.getElementById('product-detail-modal').classList.remove('open');
+  });
+  document.getElementById('product-detail-modal').addEventListener('click', (e) => {
+    if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+  });
+}
+
 function openModal(productId) {
   const item = window.menuData.menuItems.find(i => i.id === productId);
   if (!item) return;
-
   const lang = currentLanguage;
   const tr_lang = t[lang];
   const cat = window.menuData.menuCategories.find(c => c.id === item.categoryId);
-
   document.getElementById('modal-category').textContent = cat ? `${cat.icon} ${cat.name[lang]}` : '';
   document.getElementById('modal-image').src = item.image;
   document.getElementById('modal-image').alt = item.name[lang];
@@ -244,31 +264,206 @@ function openModal(productId) {
   document.getElementById('modal-calories').textContent = `${item.calories} kcal`;
   document.getElementById('lbl-allergens').textContent = tr_lang.allergens;
   document.getElementById('modal-allergens').textContent = item.allergens[lang] || '—';
-
   document.getElementById('product-detail-modal').classList.add('open');
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const closeBtn = document.getElementById('btn-close-modal');
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      document.getElementById('product-detail-modal').classList.remove('open');
-    });
+// ── Admin Panel ────────────────────────────────────────────────────────────
+function setupAdminPanel() {
+  const triggerBtn    = document.getElementById('btn-admin-trigger');
+  const loginModal    = document.getElementById('admin-login-modal');
+  const closeLogin    = document.getElementById('btn-close-admin-login');
+  const submitLogin   = document.getElementById('btn-admin-login-submit');
+  const adminPanel    = document.getElementById('admin-panel');
+  const closePanel    = document.getElementById('btn-close-admin-panel');
+  const logoutBtn     = document.getElementById('btn-admin-logout');
+  const resetBtn      = document.getElementById('btn-admin-reset');
+  const editModal     = document.getElementById('admin-edit-modal');
+  const closeEdit     = document.getElementById('btn-close-admin-edit');
+  const saveEdit      = document.getElementById('btn-admin-edit-save');
+
+  // Settings icon → show login or panel
+  triggerBtn.addEventListener('click', () => {
+    if (isAdmin) {
+      openAdminPanel();
+    } else {
+      document.getElementById('admin-username').value = '';
+      document.getElementById('admin-password').value = '';
+      document.getElementById('admin-login-error').style.display = 'none';
+      loginModal.classList.add('open');
+    }
+  });
+
+  // Close login modal
+  closeLogin.addEventListener('click', () => loginModal.classList.remove('open'));
+  loginModal.addEventListener('click', (e) => {
+    if (e.target === loginModal) loginModal.classList.remove('open');
+  });
+
+  // Submit login
+  submitLogin.addEventListener('click', doLogin);
+  document.getElementById('admin-password').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') doLogin();
+  });
+
+  function doLogin() {
+    const u = document.getElementById('admin-username').value.trim();
+    const p = document.getElementById('admin-password').value;
+    if (u === ADMIN_USER && p === ADMIN_PASS) {
+      isAdmin = true;
+      loginModal.classList.remove('open');
+      // Highlight settings icon
+      document.getElementById('btn-admin-trigger').classList.add('admin-active');
+      openAdminPanel();
+      renderMenu(); // show edit buttons on cards
+    } else {
+      document.getElementById('admin-login-error').style.display = 'block';
+    }
   }
 
-  const overlay = document.getElementById('product-detail-modal');
-  if (overlay) {
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) overlay.classList.remove('open');
+  // Close admin panel
+  closePanel.addEventListener('click', () => adminPanel.classList.remove('open'));
+
+  // Logout
+  logoutBtn.addEventListener('click', () => {
+    isAdmin = false;
+    adminPanel.classList.remove('open');
+    document.getElementById('btn-admin-trigger').classList.remove('admin-active');
+    renderMenu();
+    showToast('Admin çıkışı yapıldı.');
+  });
+
+  // Reset all edits
+  resetBtn.addEventListener('click', () => {
+    if (!confirm('Tüm fiyat ve resim değişiklikleri sıfırlanacak. Emin misin?')) return;
+    adminEdits = {};
+    localStorage.removeItem('quga_admin_edits');
+    // Reload original data
+    window.menuData.menuItems = window.menuData.menuItems.map(item => {
+      const orig = window.menuData._originalItems?.find(o => o.id === item.id);
+      return orig ? orig : item;
     });
+    adminPanel.classList.remove('open');
+    renderMenu();
+    renderAdminItemList();
+    showToast('Menü varsayılan değerlere sıfırlandı.');
+  });
+
+  // Close edit modal
+  closeEdit.addEventListener('click', () => editModal.classList.remove('open'));
+  editModal.addEventListener('click', (e) => {
+    if (e.target === editModal) editModal.classList.remove('open');
+  });
+
+  // Save edit
+  saveEdit.addEventListener('click', saveAdminEdit);
+
+  // Image URL preview on type
+  document.getElementById('edit-image').addEventListener('input', () => {
+    const val = document.getElementById('edit-image').value.trim();
+    if (val) document.getElementById('edit-img-preview').src = val;
+  });
+}
+
+function openAdminPanel() {
+  // Save originals once for reset
+  if (!window.menuData._originalItems) {
+    window.menuData._originalItems = JSON.parse(JSON.stringify(window.menuData.menuItems));
   }
-});
+  renderAdminItemList();
+  document.getElementById('admin-panel').classList.add('open');
+}
+
+function renderAdminItemList() {
+  const list = document.getElementById('admin-items-list');
+  if (!list) return;
+  const lang = 'tr';
+  list.innerHTML = window.menuData.menuItems.map(item => {
+    const edited = adminEdits[item.id];
+    return `
+      <div class="admin-item-row" data-id="${item.id}">
+        <img class="admin-item-thumb" src="${item.image}"
+          onerror="this.src='https://placehold.co/60x60/F1ECE6/9C8E86?text=?'"
+          alt="${item.name[lang]}">
+        <div class="admin-item-info">
+          <div class="admin-item-name">${item.name[lang]}</div>
+          <div class="admin-item-price">${item.price} TL ${edited ? '<span class="edited-badge">düzenlendi</span>' : ''}</div>
+        </div>
+        <button class="btn-admin-edit-item" data-edit-id="${item.id}" aria-label="Düzenle">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+        </button>
+      </div>`;
+  }).join('');
+
+  list.querySelectorAll('.btn-admin-edit-item').forEach(btn => {
+    btn.addEventListener('click', () => openAdminEditModal(btn.getAttribute('data-edit-id')));
+  });
+}
+
+let currentEditId = null;
+
+function openAdminEditModal(itemId) {
+  const item = window.menuData.menuItems.find(i => i.id === itemId);
+  if (!item) return;
+  currentEditId = itemId;
+
+  document.getElementById('admin-edit-title').textContent = item.name['tr'];
+  document.getElementById('edit-price').value = item.price;
+  document.getElementById('edit-image').value = item.image;
+  document.getElementById('edit-img-preview').src = item.image;
+
+  // Close admin panel, open edit modal
+  document.getElementById('admin-panel').classList.remove('open');
+  document.getElementById('admin-edit-modal').classList.add('open');
+}
+
+function saveAdminEdit() {
+  if (!currentEditId) return;
+  const newPrice = parseFloat(document.getElementById('edit-price').value);
+  const newImage = document.getElementById('edit-image').value.trim();
+
+  if (isNaN(newPrice) || newPrice < 0) {
+    showToast('Geçerli bir fiyat girin!');
+    return;
+  }
+  if (!newImage) {
+    showToast('Resim URL veya dosya adı boş olamaz!');
+    return;
+  }
+
+  // Save to edits store
+  adminEdits[currentEditId] = { price: newPrice, image: newImage };
+  localStorage.setItem('quga_admin_edits', JSON.stringify(adminEdits));
+
+  // Apply to live data
+  const idx = window.menuData.menuItems.findIndex(i => i.id === currentEditId);
+  if (idx !== -1) {
+    window.menuData.menuItems[idx].price = newPrice;
+    window.menuData.menuItems[idx].image = newImage;
+  }
+
+  // Close edit modal, reopen panel
+  document.getElementById('admin-edit-modal').classList.remove('open');
+  openAdminPanel();
+  renderMenu();
+  showToast('✓ Değişiklikler kaydedildi!');
+}
+
+// ── Toast Notification ────────────────────────────────────────────────────
+function showToast(msg) {
+  const toast = document.getElementById('admin-toast');
+  if (!toast) return;
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2800);
+}
 
 // ── Scroll Observer (category highlight) ──────────────────────────────────
 function setupScrollObserver() {
   const appView = document.getElementById('app-view');
   if (!appView) return;
-
   const sections = document.querySelectorAll('.menu-category-section');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -282,11 +477,6 @@ function setupScrollObserver() {
         }
       }
     });
-  }, {
-    root: appView,
-    rootMargin: '-30% 0px -60% 0px',
-    threshold: 0
-  });
-
+  }, { root: appView, rootMargin: '-30% 0px -60% 0px', threshold: 0 });
   sections.forEach(s => observer.observe(s));
 }

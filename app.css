@@ -667,3 +667,363 @@ header {
   text-align: center;
 }
 
+/* ── Admin Icon Button Active State ─────────────────────────────────────── */
+
+#btn-admin-trigger.admin-active {
+  background: var(--accent-amber-light);
+  color: var(--accent-amber);
+  box-shadow: 0 0 0 2px var(--accent-amber);
+}
+
+/* ── Admin Login Modal ───────────────────────────────────────────────────── */
+
+.admin-modal-sheet {
+  max-height: 60%;
+}
+
+.admin-modal-title {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.admin-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.admin-field label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-field input {
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid var(--border-color);
+  background: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.admin-field input:focus {
+  border-color: var(--accent-amber);
+  box-shadow: 0 0 0 3px var(--accent-amber-light);
+}
+
+.field-hint {
+  font-size: 0.72rem;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.admin-error {
+  color: #EF4444;
+  font-size: 0.82rem;
+  font-weight: 600;
+  display: none;
+  background: #FEF2F2;
+  border-radius: 8px;
+  padding: 8px 12px;
+}
+
+.btn-admin-submit {
+  background: linear-gradient(135deg, var(--accent-amber) 0%, #D5B263 100%);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+}
+
+.btn-admin-submit:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+/* ── Admin Panel Drawer (full-screen slide-in) ───────────────────────────── */
+
+.admin-panel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-color);
+  z-index: 500;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+}
+
+.admin-panel-overlay.open {
+  transform: translateX(0);
+}
+
+.admin-panel-sheet {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+.admin-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 12px 20px;
+  background: var(--panel-bg);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.admin-badge {
+  background: var(--accent-amber);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+.admin-panel-desc {
+  font-size: 0.82rem;
+  color: var(--text-tertiary);
+  padding: 10px 20px;
+  background: var(--accent-amber-light);
+  border-bottom: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.admin-items-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-item-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--panel-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  padding: 10px 12px;
+  transition: box-shadow 0.2s;
+}
+
+.admin-item-row:hover {
+  box-shadow: var(--card-shadow);
+}
+
+.admin-item-thumb {
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--border-color);
+}
+
+.admin-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-item-name {
+  font-family: var(--font-heading);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.admin-item-price {
+  font-size: 0.8rem;
+  color: var(--accent-amber);
+  font-weight: 600;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.edited-badge {
+  background: var(--accent-mint-light);
+  color: var(--accent-mint);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 5px;
+  text-transform: uppercase;
+}
+
+.btn-admin-edit-item {
+  width: 36px;
+  height: 36px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: var(--accent-amber-light);
+  border: none;
+  color: var(--accent-amber);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-admin-edit-item:hover {
+  background: var(--accent-amber);
+  color: white;
+}
+
+.admin-panel-footer {
+  display: flex;
+  gap: 10px;
+  padding: 14px 16px;
+  background: var(--panel-bg);
+  border-top: 1px solid var(--border-color);
+  flex-shrink: 0;
+}
+
+.btn-admin-logout,
+.btn-admin-reset {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 11px;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn-admin-logout {
+  background: #FEF2F2;
+  color: #EF4444;
+}
+
+.btn-admin-logout:hover {
+  background: #EF4444;
+  color: white;
+}
+
+.btn-admin-reset {
+  background: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.btn-admin-reset:hover {
+  background: var(--text-tertiary);
+  color: white;
+}
+
+/* ── Admin Edit Modal Image Preview ─────────────────────────────────────── */
+
+.edit-img-preview-wrap {
+  width: 100%;
+  height: 160px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--border-color);
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+.edit-img-preview-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Admin Edit Button on Cards ──────────────────────────────────────────── */
+
+.menu-card.admin-highlight {
+  border: 1.5px solid var(--accent-amber-light);
+}
+
+.btn-card-admin-edit {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 10;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--accent-amber);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  transition: all 0.2s;
+}
+
+.btn-card-admin-edit:hover {
+  transform: scale(1.1);
+  background: #D5B263;
+}
+
+/* ── Toast Notification ──────────────────────────────────────────────────── */
+
+.admin-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: #1F1916;
+  color: white;
+  padding: 11px 22px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  white-space: nowrap;
+}
+
+.admin-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
