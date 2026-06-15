@@ -16,6 +16,8 @@ const ADMIN_PASS = 'quga2024';
 
 // Persisted edits: { [itemId]: { name, description, price, image } }
 let adminEdits = JSON.parse(localStorage.getItem('quga_admin_edits') || '{}');
+let adminAddedItems = JSON.parse(localStorage.getItem('quga_added_items') || '[]');
+let adminDeletedItems = JSON.parse(localStorage.getItem('quga_deleted_items') || '[]');
 
 // ── Translations ───────────────────────────────────────────────────────────
 const t = {
@@ -39,17 +41,23 @@ const t = {
 
 // ── Apply admin edits to live menuData ────────────────────────────────────
 function applyAdminEdits() {
-  window.menuData.menuItems = window.menuData.menuItems.map(item => {
-    const edit = adminEdits[item.id];
-    if (!edit) return item;
-    return {
-      ...item,
-      name:        { ...item.name,        ...(edit.name || {}) },
-      description: { ...item.description, ...(edit.description || {}) },
-      price:       edit.price  !== undefined ? edit.price  : item.price,
-      image:       edit.image  !== undefined ? edit.image  : item.image,
-    };
-  });
+  const baseItems = [
+    ...window.menuData._originalItems,
+    ...adminAddedItems
+  ];
+  window.menuData.menuItems = baseItems
+    .filter(item => !adminDeletedItems.includes(item.id))
+    .map(item => {
+      const edit = adminEdits[item.id];
+      if (!edit) return item;
+      return {
+        ...item,
+        name:        { ...item.name,        ...(edit.name || {}) },
+        description: { ...item.description, ...(edit.description || {}) },
+        price:       edit.price  !== undefined ? edit.price  : item.price,
+        image:       edit.image  !== undefined ? edit.image  : item.image,
+      };
+    });
 }
 
 // ── Init ───────────────────────────────────────────────────────────────────
@@ -290,9 +298,13 @@ function setupAdminPanel() {
 
   // Reset
   document.getElementById('btn-admin-reset').addEventListener('click', () => {
-    if (!confirm('Tüm değişiklikler (resim, fiyat, isim, açıklama) sıfırlanacak. Emin misin?')) return;
+    if (!confirm('Tüm değişiklikler (eklenen, silinen ürünler ve düzenlemeler) sıfırlanacak. Emin misin?')) return;
     adminEdits = {};
+    adminAddedItems = [];
+    adminDeletedItems = [];
     localStorage.removeItem('quga_admin_edits');
+    localStorage.removeItem('quga_added_items');
+    localStorage.removeItem('quga_deleted_items');
     window.menuData.menuItems = JSON.parse(JSON.stringify(window.menuData._originalItems));
     renderMenu();
     renderAdminList();
@@ -351,6 +363,137 @@ function setupAdminPanel() {
 
   // Save
   document.getElementById('btn-admin-edit-save').addEventListener('click', saveAdminEdit);
+
+  // ── Add Product listeners ──
+  document.getElementById('btn-open-add-product').addEventListener('click', openAdminAddModal);
+  
+  document.getElementById('btn-close-admin-add').addEventListener('click', () => {
+    document.getElementById('admin-add-modal').classList.remove('open');
+    openAdminPanel();
+  });
+  
+  document.getElementById('admin-add-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) {
+      e.currentTarget.classList.remove('open');
+      openAdminPanel();
+    }
+  });
+
+  document.getElementById('add-img-file').addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      pendingAddImageData = ev.target.result;
+      document.getElementById('add-img-preview').src = pendingAddImageData;
+      document.getElementById('add-image-url').value = '';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  document.getElementById('add-image-url').addEventListener('input', e => {
+    const url = e.target.value.trim();
+    if (url) {
+      pendingAddImageData = url;
+      document.getElementById('add-img-preview').src = url;
+      document.getElementById('add-img-file').value = '';
+    }
+  });
+
+  document.getElementById('add-name-tab-tr').addEventListener('click', () => switchAddNameTab('tr'));
+  document.getElementById('add-name-tab-en').addEventListener('click', () => switchAddNameTab('en'));
+  document.getElementById('add-desc-tab-tr').addEventListener('click', () => switchAddDescTab('tr'));
+  document.getElementById('add-desc-tab-en').addEventListener('click', () => switchAddDescTab('en'));
+
+  document.getElementById('btn-admin-add-save').addEventListener('click', saveAdminAdd);
+}
+
+let pendingAddImageData = null;
+
+function openAdminAddModal() {
+  const select = document.getElementById('add-category');
+  if (select) {
+    select.innerHTML = window.menuData.menuCategories.map(c => `
+      <option value="${c.id}">${c.name['tr']}</option>
+    `).join('');
+  }
+
+  document.getElementById('add-price').value = '';
+  document.getElementById('add-name-tr').value = '';
+  document.getElementById('add-name-en').value = '';
+  document.getElementById('add-desc-tr').value = '';
+  document.getElementById('add-desc-en').value = '';
+  document.getElementById('add-image-url').value = '';
+  document.getElementById('add-img-preview').src = 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&auto=format&fit=crop&q=60';
+  document.getElementById('add-img-file').value = '';
+  pendingAddImageData = null;
+
+  switchAddNameTab('tr');
+  switchAddDescTab('tr');
+
+  document.getElementById('admin-panel').classList.remove('open');
+  document.getElementById('admin-add-modal').classList.add('open');
+}
+
+function switchAddNameTab(lang) {
+  ['tr','en'].forEach(l => {
+    document.getElementById(`add-name-tab-${l}`).classList.toggle('active', l === lang);
+    document.getElementById(`add-name-${l}`).classList.toggle('hidden', l !== lang);
+  });
+}
+
+function switchAddDescTab(lang) {
+  ['tr','en'].forEach(l => {
+    document.getElementById(`add-desc-tab-${l}`).classList.toggle('active', l === lang);
+    document.getElementById(`add-desc-${l}`).classList.toggle('hidden', l !== lang);
+  });
+}
+
+function saveAdminAdd() {
+  const priceVal = parseFloat(document.getElementById('add-price').value);
+  const nameTr = document.getElementById('add-name-tr').value.trim();
+  const nameEn = document.getElementById('add-name-en').value.trim();
+  const descTr = document.getElementById('add-desc-tr').value.trim();
+  const descEn = document.getElementById('add-desc-en').value.trim();
+  const categoryId = document.getElementById('add-category').value;
+  const urlInput = document.getElementById('add-image-url').value.trim();
+
+  if (isNaN(priceVal) || priceVal < 0) { showToast('Geçerli bir fiyat girin!'); return; }
+  if (!nameTr || !nameEn) { showToast('İsimler boş olamaz!'); return; }
+
+  let finalImage = 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=500&auto=format&fit=crop&q=60';
+  if (pendingAddImageData) {
+    finalImage = pendingAddImageData;
+  } else if (urlInput) {
+    finalImage = urlInput;
+  }
+
+  const newItem = {
+    id: 'custom_' + Date.now(),
+    categoryId: categoryId,
+    name: { tr: nameTr, en: nameEn },
+    description: { tr: descTr, en: descEn },
+    price: priceVal,
+    calories: 0,
+    allergens: { tr: "", en: "" },
+    tags: [],
+    image: finalImage,
+    options: { hasMilk: false, hasSweetness: false, hasSyrups: false }
+  };
+
+  adminAddedItems.push(newItem);
+  try {
+    localStorage.setItem('quga_added_items', JSON.stringify(adminAddedItems));
+  } catch (e) {
+    showToast('⚠️ Depolama doldu. Resmi URL ile deneyin.');
+    return;
+  }
+
+  applyAdminEdits();
+  document.getElementById('admin-add-modal').classList.remove('open');
+  renderMenu();
+  openAdminPanel();
+  showToast('✓ Yeni ürün başarıyla eklendi!');
 }
 
 function switchNameTab(lang) {
@@ -424,15 +567,52 @@ function renderAdminList() {
         <div class="admin-item-name-en">${item.name['en']}</div>
         <div class="admin-item-price">${item.price} TL ${editedLabel}</div>
       </div>
-      <button class="btn-admin-edit-item" data-edit-id="${item.id}" aria-label="Düzenle">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-      </button>
+      <div style="display:flex; gap: 4px;">
+        <button class="btn-admin-edit-item" data-edit-id="${item.id}" aria-label="Düzenle">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        </button>
+        <button class="btn-admin-delete-item" data-delete-id="${item.id}" aria-label="Sil" style="background:none; border:none; color:var(--text-tertiary); hover:color:#ef4444; cursor:pointer; padding:6px; display:flex; align-items:center; justify-content:center;">
+          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><line x1="10" y1="11" x2="10" y2="17"/><line x1="14" y1="11" x2="14" y2="17"/></svg>
+        </button>
+      </div>
     </div>`;
   }).join('');
 
   list.querySelectorAll('.btn-admin-edit-item').forEach(btn => {
     btn.addEventListener('click', () => openAdminEditModal(btn.dataset.editId));
   });
+
+  list.querySelectorAll('.btn-admin-delete-item').forEach(btn => {
+    btn.addEventListener('click', () => deleteAdminItem(btn.dataset.deleteId));
+  });
+}
+
+function deleteAdminItem(itemId) {
+  if (!confirm('Bu ürünü menüden silmek istediğinize emin misiniz?')) return;
+
+  // Check if it is a custom added item
+  const addedIndex = adminAddedItems.findIndex(i => i.id === itemId);
+  if (addedIndex !== -1) {
+    adminAddedItems.splice(addedIndex, 1);
+    localStorage.setItem('quga_added_items', JSON.stringify(adminAddedItems));
+  } else {
+    // Original item, track as deleted
+    if (!adminDeletedItems.includes(itemId)) {
+      adminDeletedItems.push(itemId);
+      localStorage.setItem('quga_deleted_items', JSON.stringify(adminDeletedItems));
+    }
+  }
+
+  // Clean up any edits for this item
+  if (adminEdits[itemId]) {
+    delete adminEdits[itemId];
+    localStorage.setItem('quga_admin_edits', JSON.stringify(adminEdits));
+  }
+
+  applyAdminEdits();
+  renderMenu();
+  renderAdminList();
+  showToast('✓ Ürün menüden silindi.');
 }
 
 // ── Open Admin Edit Modal ──────────────────────────────────────────────────
